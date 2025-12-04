@@ -21,7 +21,7 @@
 
 ## Use case 3: Simple ML training
 
-![Roofline](assets/Loss.pdf)
+![Roofline](assets/Loss.png)
 
 ## Setup
 
