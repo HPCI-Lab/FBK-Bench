@@ -1,9 +1,32 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+
+# SAMPLES
+# USECASES = [f for f in os.listdir("prov") if "ml_samples" in f]
+# SAMPLES = [u.split("_")[-2] for u in USECASES]
+# METRICS = ["Loss"]
+
+# for METRIC in METRICS: 
+
+#     sns.set_style("darkgrid")
+
+#     for USECASE in USECASES: 
+#         PATH = f"prov/{USECASE}/metrics_GR0/{METRIC}_Context.TRAINING_GR0.csv"
+#         data = pd.read_csv(PATH, sep=",")
+#         time = data["None"] - data["None"].min()
+#         sns.lineplot(data, y="Context.TRAINING", x=time, alpha=0.5, errorbar=None)
+
+#     # plt.xlim((0, 1000))
+#     plt.legend(SAMPLES, title="Number of Samples")
+#     plt.savefig(f"imgs/{USECASE}_{METRIC}.pdf")
+#     plt.close()
 
 
-USECASES = ["ml_0", "ml_1", "ml_3"]
+# COMPUTE
+USECASES = [f for f in os.listdir("prov") if "ml_epochs" in f]
+EPOCHS = [u.split("_")[-2] for u in USECASES]
 METRICS = ["Loss"]
 
 for METRIC in METRICS: 
@@ -13,10 +36,29 @@ for METRIC in METRICS:
     for USECASE in USECASES: 
         PATH = f"prov/{USECASE}/metrics_GR0/{METRIC}_Context.TRAINING_GR0.csv"
         data = pd.read_csv(PATH, sep=",")
-        sns.lineplot(data["Context.TRAINING"], alpha=0.5, errorbar=None)
+        time = data["None"] - data["None"].min()
+        sns.lineplot(data, y="Context.TRAINING", x=time, alpha=0.5, errorbar=None)
 
-    plt.xlim((0, 1000))
-    plt.legend(["256", "1024", "64"], title="Model Size")
+    # plt.xlim((0, 1000))
+    plt.legend(EPOCHS, title="Epochs")
     plt.savefig(f"imgs/{USECASE}_{METRIC}.pdf")
     plt.close()
-    # plt.show()
+
+# PARAMS
+# USECASES = [f for f in os.listdir("prov") if "ml_params" in f]
+# PARAMS = [u.split("_")[-2] for u in USECASES]
+# METRICS = ["Loss"]
+# for METRIC in METRICS: 
+
+#     sns.set_style("darkgrid")
+
+#     for USECASE in USECASES: 
+#         PATH = f"prov/{USECASE}/metrics_GR0/{METRIC}_Context.TRAINING_GR0.csv"
+#         data = pd.read_csv(PATH, sep=",")
+#         time = data["None"] - data["None"].min()
+#         sns.lineplot(data["Context.TRAINING"], alpha=0.5, errorbar=None)
+
+#     plt.xlim((0, 1000))
+#     plt.legend(PARAMS, title="Model Size")
+#     plt.savefig(f"imgs/{USECASE}_{METRIC}.pdf")
+#     plt.close()
