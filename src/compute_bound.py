@@ -76,7 +76,7 @@ def main(BATCH_SIZE, PARAMS):
         metrics_file_type=yprov4ml.MetricsType.CSV,
     )
 
-    compute_bound_training(BATCH_SIZE, PARAMS, device="mps")
+    compute_bound_training(BATCH_SIZE, PARAMS, device="cuda")
 
     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 

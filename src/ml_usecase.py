@@ -110,7 +110,7 @@ def main(EPOCHS, PARAMS, SAMPLES):
         metrics_file_type=yprov4ml.MetricsType.CSV,
     )
 
-    ml_training(EPOCHS, PARAMS, SAMPLES, device="mps")
+    ml_training(EPOCHS, PARAMS, SAMPLES, device="cuda")
 
     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 
