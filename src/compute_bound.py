@@ -4,13 +4,12 @@ import torchvision
 import torchvision.transforms as transforms
 from tqdm import tqdm
 import time
+import argparse
 import yprov4ml
 
-BATCH_SIZE = 1024
-PARAMS = 2**4
 MEM = 0
 
-def compute_bound_training(device="cuda"):
+def compute_bound_training(BATCH_SIZE, PARAMS, device="cuda"):
     global MEM
     MEM = 0
     MODEL_FLOPS = 2 * (28*28 * PARAMS) * PARAMS**2 * 2 * PARAMS * 10
@@ -64,16 +63,27 @@ def compute_bound_training(device="cuda"):
     yprov4ml.log_param("memory", MEM)
     yprov4ml.log_param("time", TIME)
 
-yprov4ml.start_run(
-    prov_user_namespace="www.example.org",
-    experiment_name=f"compute_b{BATCH_SIZE}_p{PARAMS}", 
-    provenance_save_dir="prov",
-    save_after_n_logs=100,
-    collect_all_processes=False, 
-    disable_codecarbon=True, 
-    metrics_file_type=yprov4ml.MetricsType.CSV,
-)
 
-compute_bound_training(device="mps")
 
-yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
+def main(BATCH_SIZE, PARAMS): 
+    yprov4ml.start_run(
+        prov_user_namespace="www.example.org",
+        experiment_name=f"compute_b{BATCH_SIZE}_p{PARAMS}", 
+        provenance_save_dir="prov",
+        save_after_n_logs=100,
+        collect_all_processes=False, 
+        disable_codecarbon=True, 
+        metrics_file_type=yprov4ml.MetricsType.CSV,
+    )
+
+    compute_bound_training(BATCH_SIZE, PARAMS, device="mps")
+
+    yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
+
+
+if __name__ == "__main__": 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--batch_size', default=1024, type=int, choices=[32, 64, 128, 256, 512, 1024]) 
+    parser.add_argument('-p', '--params', default=2**6, type=int, choices=[2**6, 2**8, 2**10, 2**12]) 
+    args = parser.parse_args()
+    main(args.batch_size, args.params)

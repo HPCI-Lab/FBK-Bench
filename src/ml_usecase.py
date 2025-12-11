@@ -3,17 +3,12 @@ import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
 from tqdm import tqdm
-import time
-import pandas as pd
-import numpy as np
+import argparse
 import yprov4ml
 
-BATCH_SIZE = 64
-PARAMS = 2**4
-EPOCHS = 2
-SAMPLES = None
 
-def ml_training(device="cuda"):
+def ml_training(EPOCHS, PARAMS, SAMPLES, device="cuda"):
+    BATCH_SIZE = 64
     device = torch.device(device)
 
     transform = transforms.ToTensor()
@@ -68,21 +63,21 @@ def ml_training(device="cuda"):
 # ---------------------------------------------
 # COMPUTE
 
-EPOCHSS = range(1, 10, 2)
-for EPOCHS in EPOCHSS: 
-    yprov4ml.start_run(
-        prov_user_namespace="www.example.org",
-        experiment_name=f"ml_epochs_{EPOCHS}", 
-        provenance_save_dir="prov",
-        save_after_n_logs=100,
-        collect_all_processes=False, 
-        disable_codecarbon=True, 
-        metrics_file_type=yprov4ml.MetricsType.CSV,
-    )
+# EPOCHSS = range(1, 10, 2)
+# for EPOCHS in EPOCHSS: 
+#     yprov4ml.start_run(
+#         prov_user_namespace="www.example.org",
+#         experiment_name=f"ml_epochs_{EPOCHS}", 
+#         provenance_save_dir="prov",
+#         save_after_n_logs=100,
+#         collect_all_processes=False, 
+#         disable_codecarbon=True, 
+#         metrics_file_type=yprov4ml.MetricsType.CSV,
+#     )
 
-    ml_training(device="mps")
+#     ml_training(device="mps")
 
-    yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
+#     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 # ---------------------------------------------
 
 # DATA
@@ -102,3 +97,27 @@ for EPOCHS in EPOCHSS:
 
 #     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 # ---------------------------------------------
+
+
+def main(EPOCHS, PARAMS, SAMPLES): 
+    yprov4ml.start_run(
+        prov_user_namespace="www.example.org",
+        experiment_name=f"ml_{PARAMS}_{EPOCHS}_{SAMPLES}", 
+        provenance_save_dir="prov",
+        save_after_n_logs=100,
+        collect_all_processes=False, 
+        disable_codecarbon=True, 
+        metrics_file_type=yprov4ml.MetricsType.CSV,
+    )
+
+    ml_training(EPOCHS, PARAMS, SAMPLES, device="mps")
+
+    yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
+
+if __name__ == "__main__": 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-e', '--epochs', type=int, default=1, choices=[1, 3, 5, 7, 9]) 
+    parser.add_argument('-p', '--params', type=int, default=2**6, choices=[2**6, 2**8, 2**10, 2**12]) 
+    parser.add_argument('-s', '--samples', type=int, default=2**6, choices=[2**10, 2**12, 2**14, None]) 
+    args = parser.parse_args()
+    main(args.epochs, args.params, args.samples)

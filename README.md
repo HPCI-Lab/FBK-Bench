@@ -8,6 +8,7 @@
 | - | - | - | - |
 | **Compute-memory-bound** | Very deep MLP | Compute / FLOPs | Large dense layers + Small dataset |
 | **I/O-bound** | Small CNN + heavy augmentation | Disk + CPU | Slow transforms + Small batches |
+| **ML Scaling** | MLP | Loss, Compute, Data and Parameters | Reproduce Scaling Laws |
 
 ## Use case 1: Compute-Memory bound ML training
 
@@ -39,4 +40,18 @@ Create the MNIST I/O dataset by running:
 
 ```bash
 python src/preprocess/create_MNIST_ds.py
+```
+
+## Running
+
+```bash
+python src/compute_bound.py --batch_size 64 --params 256
+```
+
+```bash
+python src/io_bound.py --tform small
+```
+
+```bash
+python src/ml_usecase.py --params 64 --epochs 1 --samples 4096 
 ```
