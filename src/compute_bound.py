@@ -83,7 +83,6 @@ def compute_bound_training(BATCH_SIZE, PARAMS, device="cuda"):
         loss.backward()
         optimizer.step()
 
-    
     TIME = time.time() - start
 
     yprov4ml.log_param("arithmetic_intensity", (MODEL_FLOPS / TIME) / MEM)
@@ -114,6 +113,6 @@ def main(BATCH_SIZE, PARAMS):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', '--batch_size', default=1024, type=int, choices=[32, 64, 128, 256, 512, 1024]) 
-    parser.add_argument('-p', '--params', default=2**12, type=int, choices=[2**6, 2**8, 2**10, 2**12, 2**14]) 
+    parser.add_argument('-p', '--params', default=2**10, type=int, choices=[2**6, 2**8, 2**10, 2**12, 2**14]) 
     args = parser.parse_args()
     main(args.batch_size, args.params)
