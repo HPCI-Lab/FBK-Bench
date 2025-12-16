@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-USECASE = "compute_b1024_p8192_0" # "io_15"
-METRICS = ["cpu_usage", "gpu_usage", "memory_usage"]
+USECASE = "compute_b64_p256_1" # "io_15"
+METRICS = ["cpu_usage", "gpu_usage", "gpu_memory_usage", "memory_usage"]
 
 for METRIC in METRICS: 
     PATH = f"prov/{USECASE}/metrics_GR0/{METRIC}_Context.TRAINING_GR0.csv"

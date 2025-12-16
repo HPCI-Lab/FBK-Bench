@@ -7,6 +7,45 @@ import time
 import argparse
 import yprov4ml
 
+class LargeMNISTCNN(nn.Module):
+    def __init__(self, width=128):
+        super().__init__()
+
+        self.features = nn.Sequential(
+            nn.Conv2d(1, width, 3, padding=1),
+            nn.BatchNorm2d(width),
+            nn.ReLU(),
+
+            nn.Conv2d(width, width, 3, padding=1),
+            nn.BatchNorm2d(width),
+            nn.ReLU(),
+            nn.MaxPool2d(2),  # 14x14
+
+            nn.Conv2d(width, width * 2, 3, padding=1),
+            nn.BatchNorm2d(width * 2),
+            nn.ReLU(),
+
+            nn.Conv2d(width * 2, width * 2, 3, padding=1),
+            nn.BatchNorm2d(width * 2),
+            nn.ReLU(),
+            nn.MaxPool2d(2),  # 7x7
+        )
+
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear((width * 2) * 7 * 7, 2048),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(2048, 1024),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(1024, 10),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        return self.classifier(x)
+
 MEM = 0
 
 def compute_bound_training(BATCH_SIZE, PARAMS, device="cuda"):
@@ -19,16 +58,7 @@ def compute_bound_training(BATCH_SIZE, PARAMS, device="cuda"):
     trainset = torchvision.datasets.MNIST(root="./data", train=True, download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
 
-    model = nn.Sequential(
-        nn.Flatten(),
-        nn.Linear(28*28, PARAMS),
-        nn.ReLU(),
-        nn.Linear(PARAMS, PARAMS),
-        nn.ReLU(),
-        nn.Linear(PARAMS, PARAMS),
-        nn.ReLU(),
-        nn.Linear(PARAMS, 10)
-    ).to(device)
+    model = LargeMNISTCNN(width=PARAMS).to(device)
 
     def hook_fn(m, inp, out):
         global MEM
@@ -84,6 +114,6 @@ def main(BATCH_SIZE, PARAMS):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', '--batch_size', default=1024, type=int, choices=[32, 64, 128, 256, 512, 1024]) 
-    parser.add_argument('-p', '--params', default=2**6, type=int, choices=[2**6, 2**8, 2**10, 2**12]) 
+    parser.add_argument('-p', '--params', default=2**12, type=int, choices=[2**6, 2**8, 2**10, 2**12, 2**14]) 
     args = parser.parse_args()
     main(args.batch_size, args.params)

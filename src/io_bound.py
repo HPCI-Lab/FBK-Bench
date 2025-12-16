@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 from torchvision.transforms import v2
 from tqdm import tqdm
 import numpy as np
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 import os
 import argparse
 import yprov4ml
@@ -12,7 +12,7 @@ import yprov4ml
 SMALL = transforms.Compose([
     transforms.ToPILImage(), 
     transforms.RandomRotation(25),
-    transforms.ToTensor(),
+    v2.ToDtype(torch.float32, scale=True),
 ])
 
 MEDIUM = transforms.Compose([
@@ -20,7 +20,7 @@ MEDIUM = transforms.Compose([
     transforms.RandomRotation(25),
     transforms.RandomAffine(0, translate=(0.2, 0.2)),
     transforms.ColorJitter(brightness=0.5, contrast=0.5),
-    transforms.ToTensor(),
+    v2.ToDtype(torch.float32, scale=True),
 ])
 
 LARGE = v2.Compose([
@@ -28,10 +28,12 @@ LARGE = v2.Compose([
     v2.RandomRotation(25),
     v2.RandomAffine(0, translate=(0.2, 0.2)),
     v2.RandomHorizontalFlip(p=0.5),
+    v2.RandomRotation(25),
     v2.RandomPhotometricDistort(p=1),
     v2.RandomResizedCrop((28, 28), antialias=True),
+    v2.RandomRotation(25),
     v2.ColorJitter(brightness=0.5, contrast=0.5),
-    v2.ToTensor(),
+    v2.ToDtype(torch.float32, scale=True),
 ])
 
 class MNISTLocalDataset(Dataset): 
@@ -56,7 +58,7 @@ def io_bound_training(tform, device="cuda"):
     if tform == "medium": tform = MEDIUM
     if tform == "large": tform = LARGE
     trainset = MNISTLocalDataset(tform)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=8, shuffle=True)
+    trainloader = DataLoader(trainset, batch_size=8, shuffle=True)
 
     model = nn.Sequential(
         nn.Conv2d(1, 32, kernel_size=3, padding=1),
@@ -98,6 +100,6 @@ def main(tform):
 
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--tform', default="small", choices=["small", "medium", "large"])      # option that takes a value
+    parser.add_argument('-t', '--tform', default="large", choices=["small", "medium", "large"])      # option that takes a value
     args = parser.parse_args()
     main(args.tform)
