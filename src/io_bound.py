@@ -12,6 +12,7 @@ import yprov4ml
 SMALL = transforms.Compose([
     transforms.ToPILImage(), 
     transforms.RandomRotation(25),
+    v2.ToImage(), 
     v2.ToDtype(torch.float32, scale=True),
 ])
 
@@ -20,6 +21,7 @@ MEDIUM = transforms.Compose([
     transforms.RandomRotation(25),
     transforms.RandomAffine(0, translate=(0.2, 0.2)),
     transforms.ColorJitter(brightness=0.5, contrast=0.5),
+    v2.ToImage(), 
     v2.ToDtype(torch.float32, scale=True),
 ])
 
@@ -33,6 +35,7 @@ LARGE = v2.Compose([
     v2.RandomResizedCrop((28, 28), antialias=True),
     v2.RandomRotation(25),
     v2.ColorJitter(brightness=0.5, contrast=0.5),
+    v2.ToImage(), 
     v2.ToDtype(torch.float32, scale=True),
 ])
 
@@ -93,7 +96,7 @@ def main(tform):
         metrics_file_type=yprov4ml.MetricsType.CSV,
     )
 
-    io_bound_training(tform=tform, device="cuda")
+    io_bound_training(tform=tform, device="mps")
 
     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 
