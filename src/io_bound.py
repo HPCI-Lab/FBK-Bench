@@ -100,6 +100,6 @@ def main(tform, BATCH_SIZE):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--tform', default="large", choices=["small", "medium", "large"]) 
-    parser.add_argument('-b', '--batch_size', default=256, choices=[256, 512, 1024])
+    parser.add_argument('-b', '--batch_size', default=512, choices=[256, 512, 1024])
     args = parser.parse_args()
     main(args.tform, args.batch_size)
