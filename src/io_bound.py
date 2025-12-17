@@ -9,6 +9,8 @@ import os
 import argparse
 import yprov4ml
 
+from model import LargeMNISTCNN
+
 SMALL = transforms.Compose([
     transforms.ToPILImage(), 
     transforms.RandomRotation(25),
@@ -63,13 +65,7 @@ def io_bound_training(tform, device="cuda"):
     trainset = MNISTLocalDataset(tform)
     trainloader = DataLoader(trainset, batch_size=8, shuffle=True)
 
-    model = nn.Sequential(
-        nn.Conv2d(1, 32, kernel_size=3, padding=1),
-        nn.ReLU(),
-        nn.AdaptiveAvgPool2d(1),
-        nn.Flatten(),
-        nn.Linear(32, 10)
-    ).to(device)
+    model = LargeMNISTCNN(width=256).to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)

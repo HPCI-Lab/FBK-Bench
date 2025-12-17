@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-USECASE = "compute_b64_p256_1" # "io_15"
+USECASE = "ml_1024_1_4096_0" # "io_15"
 METRICS = ["cpu_usage", "gpu_usage", "gpu_memory_usage", "memory_usage"]
 
 for METRIC in METRICS: 
