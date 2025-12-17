@@ -56,14 +56,14 @@ class MNISTLocalDataset(Dataset):
     def __len__(self): 
         return len(self.files)
 
-def io_bound_training(tform, BATCH_SIZE, device="cuda"):
+def io_bound_training(tform, batch_size, device="cuda"):
     device = torch.device(device)
 
     if tform == "small": tform = SMALL
     if tform == "medium": tform = MEDIUM
     if tform == "large": tform = LARGE
     trainset = MNISTLocalDataset(tform)
-    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True)
+    trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
 
     model = LargeMNISTCNN(width=256).to(device)
 
@@ -81,7 +81,7 @@ def io_bound_training(tform, BATCH_SIZE, device="cuda"):
 
     # yprov4ml.log_carbon_metrics(yprov4ml.Context.TRAINING, step=0)
 
-def main(tform): 
+def main(tform, BATCH_SIZE): 
     yprov4ml.start_run(
         prov_user_namespace="www.example.org",
         experiment_name=f"io_{tform}", 
@@ -92,7 +92,7 @@ def main(tform):
         metrics_file_type=yprov4ml.MetricsType.CSV,
     )
 
-    io_bound_training(tform=tform, device="cuda")
+    io_bound_training(tform=tform, batch_size=BATCH_SIZE, device="cuda")
 
     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 
@@ -100,6 +100,6 @@ def main(tform):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--tform', default="large", choices=["small", "medium", "large"]) 
-    parser.add_argument('-b', '--batch_size', default=128, choices=[128, 256, 512, 1024])
+    parser.add_argument('-b', '--batch_size', default=256, choices=[256, 512, 1024])
     args = parser.parse_args()
     main(args.tform, args.batch_size)
