@@ -92,7 +92,7 @@ def main(tform, BATCH_SIZE):
         metrics_file_type=yprov4ml.MetricsType.CSV,
     )
 
-    io_bound_training(tform=tform, batch_size=BATCH_SIZE, device="mps")
+    io_bound_training(tform=tform, batch_size=BATCH_SIZE, device="cuda")
 
     yprov4ml.end_run(create_graph=False, create_svg=False, crate_ro_crate=False)
 
