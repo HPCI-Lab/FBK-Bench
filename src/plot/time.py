@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-USECASES = ["io_large_5", "compute_b1024_p1024_1", "ml_1024_1_4096_0"] # "io_15"
+USECASES = ["io_large_5", "ml_4096_1_4096_0", "compute_b1024_p1024_1", "ml_1024_1_4096_0"] # "io_15"
 
 d = {}
 for USECASE in USECASES: 
