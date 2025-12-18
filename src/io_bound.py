@@ -65,7 +65,7 @@ def io_bound_training(tform, batch_size, device="cuda"):
     trainset = MNISTLocalDataset(tform)
     trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
 
-    model = LargeMNISTCNN(width=256).to(device)
+    model = LargeMNISTCNN(width=128).to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
@@ -100,6 +100,6 @@ def main(tform, BATCH_SIZE):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--tform', default="large", choices=["small", "medium", "large"]) 
-    parser.add_argument('-b', '--batch_size', default=512, choices=[256, 512, 1024])
+    parser.add_argument('-b', '--batch_size', default=1024, choices=[256, 512, 1024])
     args = parser.parse_args()
     main(args.tform, args.batch_size)

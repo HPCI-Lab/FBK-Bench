@@ -82,7 +82,7 @@ def main(EPOCHS, PARAMS, SAMPLES):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--epochs', type=int, default=1, choices=[1, 3, 5, 7, 9]) 
-    parser.add_argument('-p', '--params', type=int, default=2**10, choices=[2**6, 2**8, 2**10, 2**12]) 
+    parser.add_argument('-p', '--params', type=int, default=2**12, choices=[2**6, 2**8, 2**10, 2**12]) 
     parser.add_argument('-s', '--samples', type=int, default=2**12, choices=[2**10, 2**12, 2**14, None]) 
     args = parser.parse_args()
     main(args.epochs, args.params, args.samples)

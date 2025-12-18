@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-USECASES = ["io_small_0", "io_medium_0", "io_large_0"]
+USECASES = ["io_large_5"]
 METRICS = ["cpu_usage", "gpu_usage", "memory_usage"]
 
 for METRIC in METRICS: 
